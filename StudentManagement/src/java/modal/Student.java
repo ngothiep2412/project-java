@@ -1,23 +1,24 @@
-
 package modal;
 
 public class Student {
+
     private int id;
     private String name;
     private int age;
     private double mark;
     private int classID;
+    private String className;
 
     public Student() {
     }
 
-    
-    public Student(int id, String name, int age, double mark, int classID) {
+    public Student(int id, String name, int age, double mark, int classID, String className) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.mark = mark;
         this.classID = classID;
+        this.className = className;
     }
 
     public int getId() {
@@ -60,10 +61,12 @@ public class Student {
         this.classID = classID;
     }
 
-    @Override
-    public String toString() {
-        return "Student{" + "id=" + id + ", name=" + name + ", age=" + age + ", mark=" + mark + ", classID=" + classID + '}';
+    public String getClassName() {
+        return className;
     }
-    
-    
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
 }

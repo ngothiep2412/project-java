@@ -22,7 +22,7 @@
                     <th>name</th>
                     <th>age</th>
                     <th>mark</th>
-                    <th>class name</th>
+                    <th>class Name</th>
                     <th>action</th>
                 </tr>
             </thead>
@@ -33,8 +33,8 @@
                     <td>${student.name}</td>
                     <td>${student.age}</td>
                     <td>${student.mark}</td>
-                    <td>${student.classID}</td>
-                    <td><a href="#">Update</a> | <a href="delete-student?id=${student.id}">Delete</a>  </td>
+                    <td>${student.className}</td>
+                    <td><a href="update-student?id=${student.id}">Update</a> | <a href="delete-student?id=${student.id}">Delete</a>  </td>
                 </tr>
             </c:forEach>
             </tbody>

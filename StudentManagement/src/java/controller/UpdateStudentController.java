@@ -6,22 +6,22 @@
 package controller;
 
 import dao.StudentDAO;
+import dao.classDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modal.Classes;
 import modal.Student;
 
-public class CreateStudentController extends HttpServlet {
-
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-        }
-    }
+/**
+ *
+ * @author Thiep Ngo
+ */
+public class UpdateStudentController extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -32,10 +32,23 @@ public class CreateStudentController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("createStudent.jsp").forward(request, response);
+        int id = Integer.parseInt(request.getParameter("id"));
+        Student student = new StudentDAO().getStudentByID(id);
+        List<Classes> listClasses = new classDAO().getAllClasses();
+        
+        request.setAttribute("student", student);
+        request.setAttribute("listClasses", listClasses);
+        
+        request.getRequestDispatcher("updateStudent.jsp").forward(request, response);
     }
 
     /**
@@ -49,15 +62,13 @@ public class CreateStudentController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
         String name = request.getParameter("name");
         int age = Integer.parseInt(request.getParameter("age"));
         double mark = Double.parseDouble(request.getParameter("mark"));
         int classID = Integer.parseInt(request.getParameter("classID"));
-
-        Student student = new Student(-1, name, age, mark, classID, "");
-        StudentDAO studentDAO = new StudentDAO();
-        studentDAO.create(student);
-
+        Student student = new Student(id, name, age, mark, classID, "");
+        new StudentDAO().update(student);
         response.sendRedirect("list-students");
     }
 
