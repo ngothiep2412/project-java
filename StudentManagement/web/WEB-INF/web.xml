@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <servlet>
+        <servlet-name>ListStudentController</servlet-name>
+        <servlet-class>controller.ListStudentController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateStudentController</servlet-name>
+        <servlet-class>controller.CreateStudentController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteStudentController</servlet-name>
+        <servlet-class>controller.DeleteStudentController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ListStudentController</servlet-name>
+        <url-pattern>/list-students</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateStudentController</servlet-name>
+        <url-pattern>/create-student</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteStudentController</servlet-name>
+        <url-pattern>/delete-student</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>listStudents.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>
