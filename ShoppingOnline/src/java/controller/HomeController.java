@@ -50,6 +50,7 @@ public class HomeController extends HttpServlet {
         
         request.setAttribute("PAGE", page);
         request.setAttribute("TOTAL_PAGE", totalPage);
+        session.setAttribute("urlHistory", "home");
         request.setAttribute("LIST_PRODUCT", listProducts);
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }

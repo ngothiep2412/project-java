@@ -5,32 +5,49 @@
  */
 package controller;
 
-import dao.ProductDAO;
+import dao.Cart;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Product;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Thiep Ngo
  */
-public class DetailController extends HttpServlet {
+public class DeleteCartController extends HttpServlet {
 
-
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-          int productID = Integer.parseInt(request.getParameter("productID"));
-          
-          Product product = new ProductDAO().getProductByID(productID);
-          request.setAttribute("PRODUCT", product);
-          request.getSession().setAttribute("urlHistory", "detail?productID="+productID);
-          request.getRequestDispatcher("detail.jsp").forward(request, response);
+            int productID = Integer.parseInt(request.getParameter("productID"));
+
+            HttpSession session = request.getSession();
+            Map<Integer, Cart> carts = (Map<Integer, Cart>) session.getAttribute("CARTS");
+            if (carts == null) {
+                carts = new LinkedHashMap<>(); //linkedHashMap nó có thứ tự, xài HashMap ko có thứ tự
+            }
+            
+            if (carts.containsKey(productID)) {
+                carts.remove(productID);
+            }
+            session.setAttribute("CARTS", carts);
+            response.sendRedirect("carts");
         }
     }
 

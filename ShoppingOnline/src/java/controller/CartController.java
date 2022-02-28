@@ -5,32 +5,43 @@
  */
 package controller;
 
-import dao.ProductDAO;
+import dao.Cart;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Product;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Thiep Ngo
  */
-public class DetailController extends HttpServlet {
+public class CartController extends HttpServlet {
 
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-          int productID = Integer.parseInt(request.getParameter("productID"));
-          
-          Product product = new ProductDAO().getProductByID(productID);
-          request.setAttribute("PRODUCT", product);
-          request.getSession().setAttribute("urlHistory", "detail?productID="+productID);
-          request.getRequestDispatcher("detail.jsp").forward(request, response);
+            HttpSession session = request.getSession();
+            Map<Integer, Cart> carts = (Map<Integer, Cart>) session.getAttribute("CARTS");
+            if (carts == null) {
+                carts = new LinkedHashMap<>();
+            } 
+            
+            double totalMoney = 0;
+            for (Map.Entry<Integer, Cart> entry : carts.entrySet()) {
+                Integer productID = entry.getKey();
+                Cart cart = entry.getValue();       
+                totalMoney += cart.getQuantity()*cart.getProduct().getPrice();             
+            }
+            request.setAttribute("totalMoney", totalMoney);
+            request.setAttribute("CARTS", carts);
+            request.getRequestDispatcher("carts.jsp").forward(request, response);
         }
     }
 
