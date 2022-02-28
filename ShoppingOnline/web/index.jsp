@@ -22,46 +22,12 @@
         <link href="css/styles.css" rel="stylesheet" />
     </head>
     <body>
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="#!">Start Bootstrap</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">All Products</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-
-                    <form class="d-flex mx-auto" >
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                    <form class="d-flex my-1">
-                        <button class="btn btn-outline-dark" type="submit">
-                            <i class="bi-cart-fill me-1"></i>
-                            Cart
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                        </button>
-                    </form>
-                    <button class="btn btn-outline-info ms-lg-2">Login</button>
-                </div>
-            </div>
-        </nav>
+        <%@include file="components/navBarComponent.jsp"%>
         <!-- Header-->
         <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Shop in style</h1>
+                    <h1 class="display-4 fw-bolder">Cửa Hàng Của Ngô Thiệp</h1>
                     <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
                 </div>
             </div>
@@ -73,7 +39,7 @@
                     <div class="col-md-3 mb-sm-4">
                         <h3>List Categories</h3>
                         <div class="list-group">
-                            <c:forEach items="${LIST_CATEGORY}" var="C">
+                            <c:forEach items="${sessionScope.LIST_CATEGORY}" var="C">
                                 <li class="list-group-item"><a href="filter-category?categoryID=${C.categoryID}">${C.categoryName}</a></li>
                                 </c:forEach>
 
@@ -90,7 +56,10 @@
                                         <!-- Sale badge-->
                                         <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
                                         <!-- Product image-->
-                                        <img class="card-img-top" src="${P.imageUrl}" alt="..." />
+                                        <a href="detail?productID=${P.productID}">
+                                            <img class="card-img-top" src="${P.imageUrl}" alt="..." />
+                                        </a>
+
                                         <!-- Product details-->
                                         <div class="card-body p-4">
                                             <div class="text-center">
@@ -117,32 +86,33 @@
                                 </div>
                             </c:forEach>
                         </div>
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination justify-content-end">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="home?page=1">1</a></li>
-                                <li class="page-item"><a class="page-link" href="home?page=2">2</a></li>
-                                <li class="page-item"><a class="page-link" href="home?page=3">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Next</a>
-                                </li>
-                            </ul>
-                        </nav>
+                        <c:choose>
+                            <c:when test = "${LIST_PRODUCT == null || LIST_PRODUCT.size() == 0}">
+                                Not found
+                            </c:when>
+                            <c:otherwise>
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-end">
+                                        <li class="page-item ${PAGE-1 < 1 ? "disabled":""}">
+                                            <a class="page-link" href="home?page=${PAGE-1}">Previous</a>
+                                        </li>
+                                        <c:forEach begin="1" end="${TOTAL_PAGE}" var="i">
+                                            <li class="page-item ${i == PAGE ? "active":""}"><a class="page-link" href="home?page=${i}">${i}</a></li>
+                                            </c:forEach>
+                                        <li class="page-item ${PAGE+1 > TOTAL_PAGE ? "disabled":""}">
+                                            <a class="page-link" href="home?page=${PAGE+1}">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </c:otherwise>
+                        </c:choose>
+
                     </div>
                 </div>
 
             </div>
         </section>
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2021</p></div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
+        <%@include file="components/footerComponent.jsp"%>
     </body>
 </html>
 

@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import model.Category;
 import model.Product;
 
@@ -26,17 +27,30 @@ public class HomeController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        List <Category> listCategories = new CategoryDAO().getAllCategories();
-        List<Product> listProducts = new ProductDAO().getAllProducts();
-        request.setAttribute("LIST_CATEGORY", listCategories);
         
+        final int PAGE_SIZE = 15;
         int page = 1;
         String pageStr = request.getParameter("page");
         if (pageStr != null) {
             page = Integer.parseInt(pageStr);
         }
-        final int PAGE_SIZE = 6;
-        request.setAttribute("LIST_PRODUCT", listProducts.subList((page-1)*PAGE_SIZE, page*PAGE_SIZE));
+        
+        List<Category> listCategories = new CategoryDAO().getAllCategories();
+        ProductDAO productDAO = new ProductDAO();
+        List<Product> listProducts = new ProductDAO().getProductWithPagging(page, PAGE_SIZE);
+        
+        HttpSession session = request.getSession();
+        session.setAttribute("LIST_CATEGORY", listCategories);
+        
+        int totalProducts = productDAO.getTotalProducts();
+        int totalPage = totalProducts/ PAGE_SIZE;
+        if (totalProducts % PAGE_SIZE != 0) {
+            totalPage += 1;
+        }
+        
+        request.setAttribute("PAGE", page);
+        request.setAttribute("TOTAL_PAGE", totalPage);
+        request.setAttribute("LIST_PRODUCT", listProducts);
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
