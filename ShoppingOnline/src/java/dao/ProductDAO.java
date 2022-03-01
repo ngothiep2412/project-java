@@ -52,7 +52,7 @@ public class ProductDAO {
     public List<Product> getProductByCategoryID(int categoryID) {
         List<Product> list = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM PRODUCT WHERE CategoryID = ?";
+            String sql = "SELECT * FROM PRODUCT WHERE Category_ID = ?";
             Connection conn = new DBUtils().getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, categoryID);
