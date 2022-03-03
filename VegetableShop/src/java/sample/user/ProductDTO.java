@@ -19,13 +19,13 @@ public class ProductDTO {
     private int categoryID;
     private String importDate;
     private String usingDate;
+    private String categoryName;
+    private int status;
 
     public ProductDTO() {
     }
 
-    
-    
-    public ProductDTO(int productID, String productName, int quantity, double price, String description, String imageUrl, int categoryID, String importDate, String usingDate) {
+    public ProductDTO(int productID, String productName, int quantity, double price, String description, String imageUrl, int categoryID, String importDate, String usingDate, String categoryName, int status) {
         this.productID = productID;
         this.productName = productName;
         this.quantity = quantity;
@@ -35,6 +35,8 @@ public class ProductDTO {
         this.categoryID = categoryID;
         this.importDate = importDate;
         this.usingDate = usingDate;
+        this.categoryName = categoryName;
+        this.status = status;
     }
 
     public int getProductID() {
@@ -108,6 +110,24 @@ public class ProductDTO {
     public void setUsingDate(String usingDate) {
         this.usingDate = usingDate;
     }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
     
     
+    
+   
 }

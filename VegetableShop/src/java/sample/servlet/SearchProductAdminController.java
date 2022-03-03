@@ -11,8 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sample.category.CategoryDAO;
-import sample.category.CategoryDTO;
 import sample.user.ProductDAO;
 import sample.user.ProductDTO;
 
@@ -22,8 +20,9 @@ import sample.user.ProductDTO;
  */
 public class SearchProductAdminController extends HttpServlet {
 
-    private static final String ERROR = "admin.jsp";
-    private static final String SUCCESS = "admin.jsp";
+    private static final String ERROR = "home.jsp";
+    private static final String SUCCESS_V1 = "admin.jsp";
+    private static final String SUCCESS_V2 = "home.jsp";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -32,11 +31,36 @@ public class SearchProductAdminController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         String url = ERROR;
         try {
+            int roleID;
+            final int PAGE_SIZE = 9;
+            int pageStr = Integer.parseInt(request.getParameter("page")) ;
             String search = request.getParameter("keyword");
-            List<ProductDTO> listProducts = new ProductDAO().searchByAdmin(search);
-            if (listProducts.size() > 0) {
-                request.setAttribute("LIST_PRODUCT", listProducts);
-                url = SUCCESS;
+
+            int totalProducts = new ProductDAO().getTotalProductsWithKeyWord(search);
+            int totalPage = totalProducts / PAGE_SIZE;
+            if (totalProducts % PAGE_SIZE != 0) {
+                totalPage += 1;
+            }
+            List<ProductDTO> listProducts = new ProductDAO().searchByAdminWithPaging(search, pageStr, PAGE_SIZE);
+
+            if (request.getParameter("roleID") == null) {
+                roleID = 2;
+            } else {
+                roleID = Integer.parseInt(request.getParameter("roleID"));
+            }
+            request.setAttribute("PAGE", pageStr);
+            request.setAttribute("KEYWORD", search);
+            request.setAttribute("TOTAL_PAGE", totalPage);
+            if (roleID == 1) {
+                if (listProducts.size() >= 0) {
+                    request.setAttribute("LIST_PRODUCT", listProducts);
+                    url = SUCCESS_V1;
+                }
+            } else {
+                if (listProducts.size() >= 0) {
+                    request.setAttribute("LIST_PRODUCT", listProducts);
+                    url = SUCCESS_V2;
+                }
             }
 
         } catch (Exception e) {
@@ -58,6 +82,8 @@ public class SearchProductAdminController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         processRequest(request, response);
     }
 
@@ -72,6 +98,8 @@ public class SearchProductAdminController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
         processRequest(request, response);
     }
 

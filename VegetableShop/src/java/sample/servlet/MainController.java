@@ -6,7 +6,6 @@
 package sample.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +22,16 @@ public class MainController extends HttpServlet {
     private static final String LOGIN_CONTROLLER = "LoginController";
     private static final String SEARCH = "Search";
     private static final String SEARCH_ADMIN_CONTROLLER = "SearchProductAdminController";
+    private static final String EDIT = "Edit";
+    private static final String EDITCONTROLLER = "EditController";
+    private static final String ADD = "Add";
+    private static final String ADD_PRODUCT_CONTROLLER = "AddProductController";
+    private static final String LOGOUT = "Logout";
+    private static final String LOGOUT_CONTROLLER = "LogoutController";
+    private static final String HOME = "Home";
+    private static final String HOME_CONTROLLER = "HomeController";
+    private static final String FILTER = "Filter";
+    private static final String FILTER_CONTROLLER = "FilterCategoryController";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -36,6 +45,16 @@ public class MainController extends HttpServlet {
                 url = LOGIN_CONTROLLER;
             } else if (action.equals(SEARCH)) {
                 url = SEARCH_ADMIN_CONTROLLER;
+            } else if (action.equals(EDIT)) {
+                url = EDITCONTROLLER;
+            } else if (action.equals(ADD)) {
+                url = ADD_PRODUCT_CONTROLLER;
+            } else if (action.equals(LOGOUT)) {
+                url = LOGOUT_CONTROLLER;
+            } else if (action.equals(HOME)) {
+                url = HOME_CONTROLLER;
+            } else if (action.equals(FILTER)) {
+                url = FILTER_CONTROLLER;
             }
         } catch (Exception e) {
             log("Error at MainController" + e.toString());

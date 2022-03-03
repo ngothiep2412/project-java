@@ -6,7 +6,6 @@
 package sample.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +20,7 @@ import sample.user.ProductDTO;
  */
 public class FilterCategoryController extends HttpServlet {
 
-    private static final String ERROR = "home.jsp";
+    private static final String ERROR = "error.jsp";
     private static final String SUCCESS_V1 = "admin.jsp";
     private static final String SUCCESS_V2 = "home.jsp";
 
@@ -30,18 +29,41 @@ public class FilterCategoryController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
         try {
-            int categoryID = Integer.parseInt(request.getParameter("categoryID"));
-            int roleID = Integer.parseInt(request.getParameter("roleID"));
+            int page = 1;
+            int roleID, categoryID;
+            final int PAGE_SIZE = 9;
+            String pageStr = request.getParameter("page");
+            if (pageStr != null) {
+                page = Integer.parseInt(pageStr);
+            }
+            if (request.getParameter("categoryID") == null) {
+                categoryID = 0;
+            } else {
+                categoryID = Integer.parseInt(request.getParameter("categoryID"));
+            }
+            
+            if (request.getParameter("roleID") == null) {
+                roleID = 0;
+            } else {
+                roleID = Integer.parseInt(request.getParameter("roleID"));
+            }
+
+            int totalProducts = new ProductDAO().getTotalProductsByCategoryID(categoryID);
+            int totalPage = totalProducts / PAGE_SIZE;
+            if (totalProducts % PAGE_SIZE != 0) {
+                totalPage += 1;
+            }
+            List<ProductDTO> listProducts = new ProductDAO().getProductsByCategoryIDWithPaging(categoryID, page, PAGE_SIZE);
+            request.setAttribute("PAGE", page);
+            request.setAttribute("CATEGORYID", categoryID);
+            request.setAttribute("TOTAL_PAGE", totalPage);
             if (roleID == 1) {
-                List<ProductDTO> listProducts = new ProductDAO().getProductsByCategoryID(categoryID);
-                if (listProducts != null) {
+                if (listProducts.size() >= 0) {
                     request.setAttribute("LIST_PRODUCT", listProducts);
                     url = SUCCESS_V1;
                 }
-
-            } else if (roleID == 2) {
-                List<ProductDTO> listProducts = new ProductDAO().getProductsByCategoryID(categoryID);
-                if (listProducts != null) {
+            } else {
+                if (listProducts.size() >= 0) {
                     request.setAttribute("LIST_PRODUCT", listProducts);
                     url = SUCCESS_V2;
                 }

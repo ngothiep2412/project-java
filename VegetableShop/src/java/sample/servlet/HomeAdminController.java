@@ -25,12 +25,11 @@ public class HomeAdminController extends HttpServlet {
 
     private static final String ERROR = "admin.jsp";
     private static final String SUCCESS = "admin.jsp";
-    private static final int PAGE_ZIE = 5;
+    private static final int PAGE_ZIE = 9;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = ERROR;
-        
         try {
             int page = 1;
             String pageStr = request.getParameter("page");
@@ -45,6 +44,7 @@ public class HomeAdminController extends HttpServlet {
             if (totalProducts % PAGE_ZIE != 0) {
                 totalPage += 1;
             }
+
             request.setAttribute("PAGE", page);
             request.setAttribute("TOTAL_PAGE", totalPage);
             request.setAttribute("LIST_PRODUCT", listProducts);

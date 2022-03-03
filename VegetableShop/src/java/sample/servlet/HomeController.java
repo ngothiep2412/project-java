@@ -8,40 +8,48 @@ package sample.servlet;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import sample.category.CategoryDAO;
 import sample.category.CategoryDTO;
 import sample.user.ProductDAO;
 import sample.user.ProductDTO;
 
-/**
- *
- * @author Thiep Ngo
- */
-public class UpdateProductController extends HttpServlet {
+@WebServlet(name = "HomeController", urlPatterns = {"/HomeController"})
+public class HomeController extends HttpServlet {
 
-    private static final String ERROR = "HomeAdminController";
-    private static final String SUCCESS = "admin_update.jsp";
-
+    private static final String ERROR = "home.jsp";
+    private static final String SUCCESS = "home.jsp";
+    private static final int PAGE_SIZE = 9;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
         String url = ERROR;
         try {
-            int productID = Integer.parseInt(request.getParameter("productID"));
-            ProductDTO products = new ProductDAO().geProductByProductID(productID);
-            if (products != null) {
-                request.setAttribute("LIST_PRODUCT", products);
-                List<CategoryDTO> listCategories = new CategoryDAO().getAllCategories();
-                request.setAttribute("LIST_CATEGORY", listCategories);
-                url = SUCCESS;
+            int page = 1;
+            String pageStr = request.getParameter("page");
+            if (pageStr != null) {
+                page = Integer.parseInt(pageStr);
             }
+            HttpSession session = request.getSession();
+            List<CategoryDTO> listCategories = new CategoryDAO().getAllCategories();
+            List<ProductDTO> listProducts = new ProductDAO().getListProductWithPaging(page, PAGE_SIZE);
+            int totalProducts = new ProductDAO().getTotalProducts();
+            int totalPage = totalProducts / PAGE_SIZE;
+            if (totalProducts % PAGE_SIZE != 0) {
+                totalPage += 1;
+            }
+            request.setAttribute("PAGE", page);
+            request.setAttribute("TOTAL_PAGE", totalPage);
+            request.setAttribute("LIST_PRODUCT", listProducts);
+            session.setAttribute("LIST_CATEGORY", listCategories);
+            url = SUCCESS;
+
         } catch (Exception e) {
-            log("Error at UpdateProductController" + e.toString());
+            log("Error at DeleteProductController" + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }

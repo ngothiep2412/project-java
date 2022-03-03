@@ -6,17 +6,11 @@
 package sample.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import sample.category.CategoryDAO;
-import sample.category.CategoryDTO;
-import sample.user.ProductDAO;
-import sample.user.ProductDTO;
 import sample.user.UserDAO;
 import sample.user.UserDTO;
 
@@ -30,7 +24,7 @@ public class LoginController extends HttpServlet {
     private static final int AD = 1;
     private static final String AD_PAGE = "HomeAdminController";
     private static final int US = 2;
-    private static final String US_PAGE = "user.jsp";
+    private static final String US_PAGE = "HomeController";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

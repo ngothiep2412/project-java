@@ -1,47 +1,36 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package sample.servlet;
 
 import java.io.IOException;
-import java.util.List;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sample.category.CategoryDAO;
-import sample.category.CategoryDTO;
-import sample.user.ProductDAO;
-import sample.user.ProductDTO;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Thiep Ngo
  */
-public class UpdateProductController extends HttpServlet {
+@WebServlet(name = "LogoutController", urlPatterns = {"/LogoutController"})
+public class LogoutController extends HttpServlet {
 
-    private static final String ERROR = "HomeAdminController";
-    private static final String SUCCESS = "admin_update.jsp";
+    private static final String ERROR = "home.jsp";
+    private static final String SUCCESS = "HomeController";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
         String url = ERROR;
         try {
-            int productID = Integer.parseInt(request.getParameter("productID"));
-            ProductDTO products = new ProductDAO().geProductByProductID(productID);
-            if (products != null) {
-                request.setAttribute("LIST_PRODUCT", products);
-                List<CategoryDTO> listCategories = new CategoryDAO().getAllCategories();
-                request.setAttribute("LIST_CATEGORY", listCategories);
+            String logout = request.getParameter("Logout");
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
                 url = SUCCESS;
             }
         } catch (Exception e) {
-            log("Error at UpdateProductController" + e.toString());
+            log("Error at LogoutController" + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }

@@ -8,11 +8,10 @@ package sample.servlet;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sample.category.CategoryDAO;
-import sample.category.CategoryDTO;
 import sample.user.ProductDAO;
 import sample.user.ProductDTO;
 
@@ -20,28 +19,45 @@ import sample.user.ProductDTO;
  *
  * @author Thiep Ngo
  */
-public class UpdateProductController extends HttpServlet {
+@WebServlet(name = "EditController", urlPatterns = {"/EditController"})
+public class EditController extends HttpServlet {
 
-    private static final String ERROR = "HomeAdminController";
-    private static final String SUCCESS = "admin_update.jsp";
+    private static final String ERROR = "error.jsp";
+    private static final String SUCCESS = "HomeAdminController";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
         String url = ERROR;
         try {
             int productID = Integer.parseInt(request.getParameter("productID"));
-            ProductDTO products = new ProductDAO().geProductByProductID(productID);
-            if (products != null) {
-                request.setAttribute("LIST_PRODUCT", products);
-                List<CategoryDTO> listCategories = new CategoryDAO().getAllCategories();
-                request.setAttribute("LIST_CATEGORY", listCategories);
-                url = SUCCESS;
+            String productName = request.getParameter("productName");
+            String imageUrl = request.getParameter("imageUrl");
+            String description = request.getParameter("description");
+            double price = Double.parseDouble(request.getParameter("price"));
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            int categoryID = Integer.parseInt(request.getParameter("categoryID"));
+            String importDate = request.getParameter("importDate");
+            String usingDate = request.getParameter("usingDate");
+            ProductDTO products = new ProductDTO(productID, productName, quantity, price, description, imageUrl, categoryID, importDate, usingDate,"", 1);
+            request.setAttribute("LIST_PRODUCT", products);
+            boolean checkUpdate = new ProductDAO().updateProduct(products, productID);
+            if (checkUpdate) {
+                if (products != null) {
+                    products.setProductName(productName);
+                    products.setImageUrl(imageUrl);
+                    products.setDescription(description);
+                    products.setPrice(price);
+                    products.setQuantity(quantity);
+                    products.setCategoryID(categoryID);
+                    products.setImportDate(importDate);
+                    products.setUsingDate(usingDate);
+                    request.setAttribute("LIST_PRODUCT", products);
+                }
             }
+            url = SUCCESS;
         } catch (Exception e) {
-            log("Error at UpdateProductController" + e.toString());
+            log("EditController" + e.toString());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }

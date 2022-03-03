@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Shop Homepage - Start Bootstrap Template</title>
+    <title>Login</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
     <!-- Bootstrap icons-->
@@ -25,7 +25,7 @@
                 <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
                     <div class="card border-0 shadow rounded-3 my-5">
                         <div class="card-body p-4 p-sm-5">
-                            <h5 class="card-title text-center mb-5 fw-light fs-5">Sign In</h5>
+                            <h3 class="card-title text-center mb-5 fw-light fw-bold fs-2">Sign In</h3>
                             <form action="MainController" method="POST">
                                 <div class="form-floating mb-3">
                                     <input type="text" name="userID" required="" class="form-control" id="floatingInput" placeholder="userID">
@@ -43,26 +43,20 @@
                                     </label>
                                 </div>
 
-                                <div class="d-grid">
-                                    <input class="btn btn-primary btn-login text-uppercase fw-bold" type="submit" name="action" value="Login">
+                                <div class="d-grid" style="color: #669237">
+                                    <input class="btn btn-primary btn-login text-uppercase fw-bold"  type="submit" name="action" value="Login">
                                 </div>
-                                <c:choose>
-                                    <c:when test="${ERROR != null}">
-                                        <h3 style="color: red">${ERROR}</h3>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <h3></h3>
-                                    </c:otherwise>
-                                </c:choose>
-
-                                <hr class="my-4">
-                                <div class="d-grid mb-2">
-                                    <button class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
-                                        <i class="fab fa-google me-2"></i> Sign in with Google
-                                    </button>
-                                </div>
-
+                                <c:if test="${ERROR != null}">
+                                    <h3 style="color: red">${ERROR}</h3>
+                                </c:if>
                             </form>
+                            <hr class="my-4">
+                            <div class="d-grid mb-2">
+                                <button class="btn btn-google btn-login text-uppercase fw-bold" type="submit">
+                                    <i class="fab fa-google me-2"></i> Sign in with Google
+                                </button>
+                                <div class="mt-2" style="font-size: 0.875rem; color: rgba(0,0,0,.26); display: flex; justify-content: center">Bạn mới biết đến Shop?<a href="create.jsp" style="color: #669237">Đăng ký</a></div>
+                            </div>
                         </div>
                     </div>
                 </div>
